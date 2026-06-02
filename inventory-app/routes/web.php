@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redirect;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\RegisterController;
 Route::get('/', function () {
     return view('home');
 });
+
 
 // =====================
 // AUTH (LOGIN)
@@ -27,37 +29,41 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 
 
 // =====================
-// CATEGORY ROUTE
+// PROTECTED ROUTES (must login)
 // =====================
 
-Route::resource('categories', CategoryController::class);
+Route::middleware('auth')->group(function () {
 
+    // =====================
+    // CATEGORY ROUTE
+    // =====================
 
-// =====================
-// PRODUCT ROUTE
-// =====================
+    Route::resource('categories', CategoryController::class);
 
-Route::get('/products', [ProductController::class, 'index'])
-    ->name('products.index');
+    // =====================
+    // PRODUCT ROUTE
+    // =====================
 
-Route::get('/insert', [ProductController::class, 'insert']);
+    Route::get('/products', [ProductController::class, 'index'])
+        ->name('products.index');
 
-Route::get('/delete/{id}', [ProductController::class, 'delete']);
+    Route::get('/insert', [ProductController::class, 'insert']);
 
+    Route::get('/delete/{id}', [ProductController::class, 'delete']);
 
-// CREATE
-Route::get('/products/create', [ProductController::class, 'create'])
-    ->name('products.create');
+    // CREATE
+    Route::get('/products/create', [ProductController::class, 'create'])
+        ->name('products.create');
 
-Route::post('/products', [ProductController::class, 'store'])
-    ->name('products.store');
+    Route::post('/products', [ProductController::class, 'store'])
+        ->name('products.store');
 
+    // EDIT
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])
+        ->name('products.edit');
 
-// EDIT
-Route::get('/products/{id}/edit', [ProductController::class, 'edit'])
-    ->name('products.edit');
+    // UPDATE
+    Route::put('/products/{id}', [ProductController::class, 'update'])
+        ->name('products.update');
 
-
-// UPDATE
-Route::put('/products/{id}', [ProductController::class, 'update'])
-    ->name('products.update');
+});

@@ -31,11 +31,12 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        Auth::login($user);
+        // Setelah registrasi, arahkan ke halaman login.
+        // Tidak auto-login sesuai kebutuhan.
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        $request->session()->regenerate();
-
-        return redirect()->intended('/products');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');
     }
 
     // NOTE: register only (no verification/reset) as task asks minimal register.
