@@ -45,6 +45,23 @@
                         </a>
                     </li>
 
+                    @auth
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-light btn-sm">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">
+                                Login
+                            </a>
+                        </li>
+                    @endauth
+
                 </ul>
 
             </div>
